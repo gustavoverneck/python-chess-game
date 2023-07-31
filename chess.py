@@ -11,6 +11,8 @@
                 - Block impossible moves
                 - Add turns for players
                 - Smooth game's creashs: If input not valid, try again instead of breaking
+                - Add Victory and Surrender
+                - Add Castling
 
 '''
 
