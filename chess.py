@@ -22,17 +22,12 @@ class ChessGame:
         print("\n --- Initializing chess game... ---\n")
         self.setupBoard()
         running = True
-        rodada = 0
+        self.rodada = 1
         while running:
-            rodada += 1
-            print("\n-------- RODADA {} --------\n".format(rodada))
+            print("\n-------- Move {} --------\n".format(self.rodada))
             self.showBoard()
-            move_from = input("Insira a casa a ser movida: ")
-            move_to = input("Para onde deseja mover: ")
-            self.playMove(move_from, move_to)
-            if int(input("\n0 ou 1: ")) == 0:
-                print("Jogo encerrado!")
-                running = False
+            self.playMove()
+
 
     def setupBoard(self):
         self.board = [[Piece("Empty", "Space") for i in range(8)] for j in range(8)]
@@ -64,7 +59,10 @@ class ChessGame:
         self.board[7][3] = Piece("Black", "King")
 
     def verifyMove(self, moveFrom, moveTo):
-        return True
+        if ( (moveFrom[0] >= 0) and (moveFrom[0] <= 7) and (moveFrom[1] >= 0) and (moveFrom[1] <= 7) and (moveTo[0] >= 0) and (moveTo[0] <= 7) and (moveTo[1] >= 0) and (moveTo[1] <= 7) ):
+            return True
+        else:
+            return False
     
     def showBoard(self):
         print("  -  A B C D E F G H")
@@ -105,15 +103,21 @@ class ChessGame:
                     print("{} - {}\n".format(j+1, str2))
                     str2 = ""
 
-    def playMove(self, moveFrom, moveTo):
-        moveFrom = self.moveToMatrix(moveFrom)
-        moveTo = self.moveToMatrix(moveTo)
-        if self.verifyMove(moveFrom, moveTo):
-            self.board[moveTo[1]][moveTo[0]] = self.board[moveFrom[1]][moveFrom[0]]
-            self.board[moveFrom[1]][moveFrom[0]] = Piece("Empty", "Space")
-        else:
-            print("Invalid movement! Try again.")
-    
+    def playMove(self):
+        valid_move = False
+        while not valid_move:
+            moveFrom = input("Input the square to be moved: ")
+            moveTo = input("Input where it should be moved to: ")
+            moveFrom = self.moveToMatrix(moveFrom)
+            moveTo = self.moveToMatrix(moveTo)
+            if (self.verifyMove(moveFrom, moveTo)):
+                valid_move = True
+                self.rodada += 1
+            if (valid_move == False):
+                print("Invalid play! Please try again.")
+        self.board[moveTo[1]][moveTo[0]] = self.board[moveFrom[1]][moveFrom[0]]
+        self.board[moveFrom[1]][moveFrom[0]] = Piece("Empty", "Space")
+
     def moveToMatrix(self, move):
         match move[0]:
             case "A":
@@ -121,20 +125,22 @@ class ChessGame:
             case "B":
                 return [1, int(move[1])-1]
             case "C":
-                return [0, int(move[1])-1]
+                return [2, int(move[1])-1]
             case "D":
-                return [0, int(move[1])-1]
+                return [3, int(move[1])-1]
             case "E":
-                return [0, int(move[1])-1]
+                return [4, int(move[1])-1]
             case "F":
-                return [0, int(move[1])-1]
+                return [5, int(move[1])-1]
             case "G":
-                return [0, int(move[1])-1]
+                return [6, int(move[1])-1]
             case "H":
-                return [0, int(move[1])-1]
+                return [7, int(move[1])-1]
             case _:
                 raise Exception("Error in play.")
-            
+    
+    def __str__(self):  # To-do: Add game status
+        return "Chess game"
 
 
 class Piece:
